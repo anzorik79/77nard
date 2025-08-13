@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Backgammon Stars</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>* { box-sizing: border-box; }
+body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#0c0e10; color:#e7e9ea; }
+.topbar { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:#15181c; border-bottom:1px solid #222; position:sticky; top:0; z-index:10; }
+.topbar h1 { margin:0; font-size:18px; letter-spacing:0.5px; }
+.balances span { margin-left:16px; opacity:0.9; }
+#app { max-width: 1280px; margin: 0 auto; }
+.card { background:#13161a; margin:16px; padding:16px; border:1px solid #222; border-radius:10px; }
+.row { display:flex; gap:8px; align-items:center; margin:8px 0; flex-wrap: wrap; }
+input, select, button { padding:10px 12px; border-radius:8px; border:1px solid #2b2f36; background:#0f1114; color:#e7e9ea; }
+button { cursor:pointer; }
+button.accent { background:#1f4bfd; border-color:#3d5bfd; }
+button:disabled { opacity:0.5; cursor:not-allowed; }
+.hidden { display:none; }
+.hint { opacity:0.7; }
+.warn { margin-top:10px; }
+.gamebar { display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid #222; }
+.dice { display:flex; align-items:center; gap:8px; }
+#boardContainer { padding:12px; display:flex; justify-content:center; }
+.legend { display:flex; gap:16px; justify-content:center; opacity:0.85; margin:8px 0 16px; }
+.legend .p1::before { content:''; display:inline-block; width:12px; height:12px; margin-right:6px; background:#f5f5f5; border:1px solid #999; vertical-align:middle; }
+.legend .p2::before { content:''; display:inline-block; width:12px; height:12px; margin-right:6px; background:#111; border:1px solid #555; vertical-align:middle; }
+.foot { padding:24px; text-align:center; opacity:0.6; }
+#board { border:1px solid #333; border-radius:8px; background:#1b1f24; }
+</style>
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <h1>Backgammon Stars</h1>
+      <div class="balances">
+        <span>⭐ Реальные: <b id="realStars">0</b></span>
+        <span>★ Виртуальные: <b id="virtualStars">0</b></span>
+      </div>
+    </header>
+
+    <section id="lobbySection" class="card">
+      <h2>Лобби</h2>
+      <div id="userInfo" style="margin-bottom:10px;opacity:0.8;"></div>
+      <div class="row">
+        <label>Тип матча:</label>
+        <select id="matchType">
+          <option value="virtual_bot">Виртуальные звёзды vs Бот</option>
+          <option value="real_online">Реальные звёзды Онлайн (ставка оба вносят)</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Ставка:</label>
+        <input id="stake" type="number" min="1" value="10"/>
+        <span class="hint">Рейк 10% удерживается только со ставок реальными звёздами (онлайн).</span>
+      </div>
+      <div class="row">
+        <button id="startMatchBtn">Начать матч</button>
+        <button id="addVirtualBtn">+100 виртуальных</button>
+        <button id="buyRealBtn" class="accent" title="Покупки только за реальные — тут мок-оплата отключена.">Купить реальные (OFF)</button>
+      </div>
+      <details class="warn">
+        <summary>Важно</summary>
+        <ul>
+          <li>Покупки доступны только за реальные звёзды. Кнопка оплаты отключена (заглушка).</li>
+          <li>За победу авто-награда не выдаётся. Изменение баланса идёт только через ставки.</li>
+          <li>В режиме виртуальных звёзд — игра с ботом.</li>
+          <li>В режиме реальных звёзд — онлайн-матч (заглушка матчера, без реального сервера).</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="gameSection" class="hidden">
+      <div class="gamebar">
+        <button id="backToLobby">&larr; В лобби</button>
+        <div class="dice">
+          <button id="rollBtn">Бросить кости</button>
+          <span id="diceValues">—</span>
+        </div>
+        <div id="turnInfo">Ход: —</div>
+      </div>
+      <div id="boardContainer">
+        <canvas id="board" width="1200" height="800"></canvas>
+      </div>
+      <div class="legend">
+        <span class="p1">Игрок: белые</span>
+        <span class="p2">Оппонент: чёрные</span>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <small>© Backgammon Stars — Telegram Mini App версия.</small>
+    </footer>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>
